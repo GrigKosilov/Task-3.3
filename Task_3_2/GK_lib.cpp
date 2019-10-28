@@ -56,11 +56,3 @@ namespace GK {
 }
 
 /* MADE BY GRIG_KOSILOV IN MEPHI 2019 */
-
-namespace GK {
-	int getInt();
-	double getDouble();
-	char getChar();
-}
-
-/* MADE BY GRIG_KOSILOV IN MEPHI 2019 */
