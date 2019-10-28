@@ -33,66 +33,6 @@ void test_queue() {
 
 	std::cout << "\n\nThats all\n";
 }
-void test_operator() {
-	std::cout << "\n\nCreate and show massive size 7 of info \n";
-	const int size = 7;
-	Queue::info init[size];
-	for (int i = 0; i < size; i++) {
-		std::cin >> init[i];
-	}
-	for (int i = 0; i < size; i++) {
-		std::cout << init[i];
-	}
-	/*std::cout << "\n\nCreate and show queue with massive initialization\n";
-	Queue::Queue test_q(init, size);
-	std::cout << test_q;
-
-	std::cout << "\n\nAdd element from keyboard and show queue\n";
-	std::cin >> test_q;
-	std::cout << test_q;
-
-	std::cout << "\n\nPls put one element to join in to queue\n";
-	Queue::info test_info;
-	std::cin >> test_info;
-	test_q += test_info;
-	std::cout << test_q << test_info;
-
-	*/
-					Queue::Queue test_q;
-	std::cout << "\n\nCreate and show massive size 5 of info \n";
-	const int size1 = 5;
-	Queue::info init1[size1];
-	for (int i = 0; i < size1; i++) {
-		std::cin >> init1[i];
-	}
-	for (int i = 0; i < size1; i++) {
-		std::cout << init1[i] << std::endl;
-	}
-	
-	Queue::Queue test_q1(init1, size1);
-	test_q = test_q1;
-	std::cout << test_q << test_q1;
-
-	Queue::Queue test_q2(init1, size1);
-	test_q2 = test_q;
-	std::cout << test_q << test_q2;
-
-	Queue::Queue test_q3(init, size);
-	Queue::Queue test_q4(init1, size1);
-	test_q3 += test_q4;
-	std::cout << test_q3 << test_q4;
-
-	Queue::Queue test_q5(init, size);
-	Queue::Queue test_q6(test_q5);
-	std::cout << test_q5 << test_q6;
-
-	Queue::Queue test_q7(init, size);
-	Queue::Queue test_q8(*test_q7);
-	std::cout << test_q5 << test_q6;
-
-	//test_q5 += test_q6;
-	//test_q5 = &test_q6;
-}
 int main() {
 	test_operator();
 	return 0;
