@@ -18,6 +18,14 @@ namespace Queue {
 	inline void info::getInfo() {
 		std::cout << "num:" << num << ", str: " << str << "." << std::endl;
 	}
+	std::ostream& operator << (std::ostream& out, info& data) {
+		data.getInfo();
+		return out;
+	}
+	std::istream& operator >> (std::istream& cin, info& data) {
+		data.setInfo();
+		return cin;
+	}
 
 	void Queue::resizef() {
 		info* old_data = data;
@@ -65,7 +73,7 @@ namespace Queue {
 	}
 	info Queue::popf() {
 		if (emptiness == 1)
-			throw "Г’Г ГЎГ«ГЁГ¶Г  ГЇГіГ±ГІГ ";
+			throw "Таблица пуста";
 		info data1=readf(data[head++]);
 		if (head == tail) {
 			emptiness = 1;
@@ -135,14 +143,56 @@ namespace Queue {
 		if (emptiness == 1) std::cout << "Queue is empty." << std::endl;
 		else std::cout << "Queue is availible for writing." << std::endl;
 	}
+
+	std::istream& operator >> (std::istream& cin, Queue& queue) {
+		queue.setIn();
+		return cin;
+	}
+	std::ostream& operator <<(std::ostream& cout, Queue& queue) {
+		queue.getAll();
+		return cout;
+	}	
+	Queue& Queue::operator += (const Queue& queue0) {
+		Queue tmq(queue0);
+		while (tmq.emptiness != true)
+			pushf(tmq.popf());
+		return *this;
+	}	
+	Queue& Queue::operator = (const Queue& queue0) {
+		if (this != &queue0) {
+			head = 0, tail = 0; emptiness = true; delete[] data;
+			allocf();
+			for (int i = queue0.head; i < queue0.tail; i++)
+				pushf(queue0.data[i]);
+		}
+		return *this;
+	}
+	Queue& Queue::operator = (Queue&& queue0) {
+		int tmh = head,			tmt = tail,				tms = size;				info* ptr = data;
+		head = queue0.head,		tail = queue0.tail,		size = queue0.size;		data = queue0.data;
+		queue0.head = tmh,		queue0.tail = tmt,		queue0.size = tms;		queue0.data = ptr;
+		return *this;
+	}
+	Queue& Queue::operator ()(Queue& queue0) { 
+		while (queue0.emptiness != 1)
+			pushf(queue0.popf());
+		return *this;
+	}
+
+	/*info& Queue::operator -- () {
+		return this->popf();
+	}
+	const info& Queue::operator --(int) {
+		return this->popf();
+	}*/
 }
 
 /*
-Г—Вё ГІГ ГЄГ®ГҐ static?
+Чё такое static?
 
-ГЌГ  ГіГ°Г®ГўГ­ГҐ ГґГіГ­ГЄГ¶ГЁГЁ
-static Г®Г§Г­Г Г·Г ГҐГІ, Г·ГІГ® Г§Г­Г Г·ГҐГ­ГЁГҐ ГЇГ®Г¤Г¤ГҐГ°Г¦ГЁГўГ ГҐГІГ±Гї Г¬ГҐГ¦Г¤Гі ГўГ»Г§Г®ГўГ Г¬ГЁ ГґГіГ­ГЄГ¶ГЁГ©.
-Г‘ГҐГ¬Г Г­ГІГЁГЄГ  ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»Гµ ГґГіГ­ГЄГ¶ГЁГЁ static ГЇГ®ГµГ®Г¦Г  Г­Г  ГЈГ«Г®ГЎГ Г«ГјГ­Г»ГҐ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ,
-ГЇГ®Г±ГЄГ®Г«ГјГЄГі Г®Г­ГЁ Г­Г ГµГ®Г¤ГїГІГ±Гї Гў Г±ГҐГЈГ¬ГҐГ­ГІГҐ Г¤Г Г­Г­Г»Гµ ГЇГ°Г®ГЈГ°Г Г¬Г¬Г» (Г  Г­ГҐ Г±ГІГҐГЄ ГЁГ«ГЁ ГЄГіГ·Г ),
-Г±Г¬. ГЅГІГ®ГІ ГўГ®ГЇГ°Г®Г± Г¤Г«Гї ГЎГ®Г«ГҐГҐ ГЇГ®Г¤Г°Г®ГЎГ­Г®Г© ГЁГ­ГґГ®Г°Г¬Г Г¶ГЁГЁ Г® ГўГ°ГҐГ¬ГҐГ­ГЁ Г¦ГЁГ§Г­ГЁ static.
+На уровне функции
+static означает, что значение поддерживается между вызовами функций.
+Семантика переменных функции static похожа на глобальные переменные,
+поскольку они находятся в сегменте данных программы (а не стек или куча),
+см. этот вопрос для более подробной информации о времени жизни static.
 */

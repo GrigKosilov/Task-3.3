@@ -10,6 +10,9 @@ namespace Queue {
 		//~info() { delete[] str; }
 		info& setInfo();
 		inline void getInfo();
+
+		friend std::ostream& operator << (std::ostream& out, info& data);
+		friend std::istream& operator >> (std::istream& in, info& data);
 	};
 	class Queue {
 	private:
@@ -39,6 +42,17 @@ namespace Queue {
 		void getAll();
 		info getVar();
 		void check();
+		
+		friend std::ostream& operator << (std::ostream&, Queue&);//
+		friend std::istream& operator >> (std::istream&, Queue&);//
+		Queue& operator += (const Queue&); //Добавили в this всё из q0//
+		Queue& operator = (const Queue&); //Удалили this и положили в него q0//
+		Queue& operator = (Queue&&); //Поменяли местами this и q0
+		Queue& operator () (Queue&); //Вынимаем всё из q0 и вставляем в this
+
+		// Queue& operator + (const Queue&);
+		// info& operator -- ();
+		// const info& operator -- (int);
 	};
 
 }
