@@ -18,13 +18,21 @@ namespace Queue {
 	inline void info::getInfo() {
 		std::cout << "num:" << num << ", str: " << str << "." << std::endl;
 	}
+	std::ostream& operator << (std::ostream& out, info& data0) {
+		data0.getInfo();
+		return out;
+	}
+	std::istream& operator >> (std::istream& cin, info& data0) {
+		data0.setInfo();
+		return cin;
+	}
 
 	void Queue::resizef() {
 		info* old_data = data;
-		try { 
-			data = new info[size]; 
+		try {
+			data = new info[size];
 		}
-		catch (std::bad_alloc & ba){
+		catch (std::bad_alloc & ba) {
 			std::cout << "BAD ALLOC" << ba.what() << std::endl;
 			exit(0);
 		}
@@ -37,7 +45,7 @@ namespace Queue {
 		head = 0;
 		//delete[] old_data;
 	}
-		void Queue::allocf() {
+	void Queue::allocf() {
 		try {
 			data = new info[size];
 		}
@@ -56,7 +64,7 @@ namespace Queue {
 		writef(tail++, data0);
 		return;
 	}
-		void Queue::writef(int pos, info data0) {
+	void Queue::writef(int pos, info data0) {
 		data[pos].num = data0.num;
 		int j = 0;
 		for (; data0.str[j] != '\0'; j++)
@@ -65,8 +73,8 @@ namespace Queue {
 	}
 	info Queue::popf() {
 		if (emptiness == 1)
-			throw "Ã’Ã Ã¡Ã«Ã¨Ã¶Ã  Ã¯Ã³Ã±Ã²Ã ";
-		info data1=readf(data[head++]);
+			throw "Òàáëèöà ïóñòà";
+		info data1 = readf(data[head++]);
 		if (head == tail) {
 			emptiness = 1;
 			head = 0, tail = 0;
@@ -77,7 +85,7 @@ namespace Queue {
 		}
 		return data1;
 	}
-		info Queue::readf(info data) {
+	info Queue::readf(info data) {
 		info data1;
 		data1.num = data.num;
 		int j = 0;
@@ -135,14 +143,61 @@ namespace Queue {
 		if (emptiness == 1) std::cout << "Queue is empty." << std::endl;
 		else std::cout << "Queue is availible for writing." << std::endl;
 	}
+
+	std::istream& operator >> (std::istream& cin, Queue& queue) {
+		queue.setIn();
+		return cin;
+	}
+	std::ostream& operator <<(std::ostream& cout, Queue& queue) {
+		queue.getAll();
+		return cout;
+	}
+	Queue& Queue::operator += (const Queue& queue0) {
+		Queue tmq(queue0);
+		while (tmq.emptiness != true)
+			pushf(tmq.popf());
+		return *this;
+	}
+	Queue& Queue::operator = (const Queue& queue0) {
+		if (this != &queue0) {
+			head = 0, tail = 0; emptiness = true; delete[] data;
+			allocf();
+			for (int i = queue0.head; i < queue0.tail; i++)
+				pushf(queue0.data[i]);
+		}
+		return *this;
+	}
+	Queue& Queue::operator = (Queue&& queue0) {
+		int tmh = head,		tmt = tail,			tms = size;			bool tme = emptiness;			info* ptr = data;
+		head = queue0.head, tail = queue0.tail, size = queue0.size;	emptiness = queue0.emptiness;	data = queue0.data;
+		queue0.head = tmh, queue0.tail = tmt,	queue0.size = tms;	queue0.emptiness = tme;			queue0.data = ptr;
+		return *this;
+	}
+	Queue& Queue::operator ()(Queue& queue0) {
+		while (queue0.emptiness != 1)
+			pushf(queue0.popf());
+		return *this;
+	}
+	info Queue::operator -- () {
+		return popf();
+	}
+	info Queue::operator --(int) {
+		return popf();
+	}
+	Queue operator + (const Queue& queue, const Queue& queue0) { //Queue::
+		Queue tmq(queue), tmq0(queue0);
+		while (tmq0.emptiness != true)
+			tmq.pushf(tmq0.popf());
+		return tmq;
+	}
 }
 
 /*
-Ã—Â¸ Ã²Ã ÃªÃ®Ã¥ static?
+×¸ òàêîå static?
 
-ÃÃ  Ã³Ã°Ã®Ã¢Ã­Ã¥ Ã´Ã³Ã­ÃªÃ¶Ã¨Ã¨
-static Ã®Ã§Ã­Ã Ã·Ã Ã¥Ã², Ã·Ã²Ã® Ã§Ã­Ã Ã·Ã¥Ã­Ã¨Ã¥ Ã¯Ã®Ã¤Ã¤Ã¥Ã°Ã¦Ã¨Ã¢Ã Ã¥Ã²Ã±Ã¿ Ã¬Ã¥Ã¦Ã¤Ã³ Ã¢Ã»Ã§Ã®Ã¢Ã Ã¬Ã¨ Ã´Ã³Ã­ÃªÃ¶Ã¨Ã©.
-Ã‘Ã¥Ã¬Ã Ã­Ã²Ã¨ÃªÃ  Ã¯Ã¥Ã°Ã¥Ã¬Ã¥Ã­Ã­Ã»Ãµ Ã´Ã³Ã­ÃªÃ¶Ã¨Ã¨ static Ã¯Ã®ÃµÃ®Ã¦Ã  Ã­Ã  Ã£Ã«Ã®Ã¡Ã Ã«Ã¼Ã­Ã»Ã¥ Ã¯Ã¥Ã°Ã¥Ã¬Ã¥Ã­Ã­Ã»Ã¥,
-Ã¯Ã®Ã±ÃªÃ®Ã«Ã¼ÃªÃ³ Ã®Ã­Ã¨ Ã­Ã ÃµÃ®Ã¤Ã¿Ã²Ã±Ã¿ Ã¢ Ã±Ã¥Ã£Ã¬Ã¥Ã­Ã²Ã¥ Ã¤Ã Ã­Ã­Ã»Ãµ Ã¯Ã°Ã®Ã£Ã°Ã Ã¬Ã¬Ã» (Ã  Ã­Ã¥ Ã±Ã²Ã¥Ãª Ã¨Ã«Ã¨ ÃªÃ³Ã·Ã ),
-Ã±Ã¬. Ã½Ã²Ã®Ã² Ã¢Ã®Ã¯Ã°Ã®Ã± Ã¤Ã«Ã¿ Ã¡Ã®Ã«Ã¥Ã¥ Ã¯Ã®Ã¤Ã°Ã®Ã¡Ã­Ã®Ã© Ã¨Ã­Ã´Ã®Ã°Ã¬Ã Ã¶Ã¨Ã¨ Ã® Ã¢Ã°Ã¥Ã¬Ã¥Ã­Ã¨ Ã¦Ã¨Ã§Ã­Ã¨ static.
+Íà óðîâíå ôóíêöèè
+static îçíà÷àåò, ÷òî çíà÷åíèå ïîääåðæèâàåòñÿ ìåæäó âûçîâàìè ôóíêöèé.
+Ñåìàíòèêà ïåðåìåííûõ ôóíêöèè static ïîõîæà íà ãëîáàëüíûå ïåðåìåííûå,
+ïîñêîëüêó îíè íàõîäÿòñÿ â ñåãìåíòå äàííûõ ïðîãðàììû (à íå ñòåê èëè êó÷à),
+ñì. ýòîò âîïðîñ äëÿ áîëåå ïîäðîáíîé èíôîðìàöèè î âðåìåíè æèçíè static.
 */
